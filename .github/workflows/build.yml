@@ -1,4 +1,4 @@
-name: Build SMillet-Next APK
+name: Build Smillet-Next APK
 
 on:
   push:
@@ -18,21 +18,13 @@ jobs:
 
       - name: Extract zip if uploaded as archive
         run: |
-          for z in smillet_next_v3.1.zip smillet_next_v3.0.zip smillet_miuix_v2.2.zip smillet_miuix_v2.1.zip smillet_miuix_v2.0.zip smillet_miuix_project.zip; do
+          for z in Smillet-Next_v3.2.zip Smillet-Next*.zip smillet_next*.zip; do
             if [ -f "$z" ]; then
               echo "Found $z, extracting..."
               unzip -o -q "$z"
               break
             fi
           done
-          python3 -c '
-          p = "app/src/main/java/com/sidesand/millet/hook/powerkeeper/PowerKeeperHook.kt"
-          with open(p, "r", encoding="utf-8") as f:
-              s = f.read()
-          s = s.replace("\"导致 [$packageName] (UID=$uid) 未被冻结的原因：\n• \" + reasons.joinToString(\"\n• \")", "\"导致 [$packageName] (UID=$uid) 未被冻结的原因：\\n• \" + reasons.joinToString(\"\\n• \")")
-          with open(p, "w", encoding="utf-8") as f:
-              f.write(s)
-          '
 
       - name: Set up JDK 17
         uses: actions/setup-java@v5
@@ -43,22 +35,22 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Setup Gradle Wrapper
+      - name: Setup Gradle 9.7.1
         uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: '8.7'
+          gradle-version: '9.7.1'
 
       - name: Build Debug & Release APKs
-        run: gradle assembleDebug assembleRelease --stacktrace
+        run: gradle :app:assembleDebug :app:assembleRelease -x lint --stacktrace
 
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
-          name: smillet-next-debug-apk
+          name: Smillet-Next-debug-apk
           path: app/build/outputs/apk/debug/*.apk
 
       - name: Upload Release APK
         uses: actions/upload-artifact@v4
         with:
-          name: smillet-next-release-apk
+          name: Smillet-Next-release-apk
           path: app/build/outputs/apk/release/*.apk
