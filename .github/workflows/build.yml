@@ -1,24 +1,38 @@
-name: Build smillet-next APK
+name: Build SMillet-Next APK
 
 on:
   push:
     branches: [ "main", "master" ]
   workflow_dispatch:
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   build:
     runs-on: ubuntu-24.04
+
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
-      - name: Unpack smillet_next_v3.0.zip
+      - name: Extract zip if uploaded as archive
         run: |
-          if [ -f "smillet_next_v3.0.zip" ]; then
-            unzip -o "smillet_next_v3.0.zip"
-          else
-            unzip -o "$(ls -t *.zip | head -n 1)"
-          fi
+          for z in smillet_next_v3.1.zip smillet_next_v3.0.zip smillet_miuix_v2.2.zip smillet_miuix_v2.1.zip smillet_miuix_v2.0.zip smillet_miuix_project.zip; do
+            if [ -f "$z" ]; then
+              echo "Found $z, extracting..."
+              unzip -o -q "$z"
+              break
+            fi
+          done
+          python3 -c '
+          p = "app/src/main/java/com/sidesand/millet/hook/powerkeeper/PowerKeeperHook.kt"
+          with open(p, "r", encoding="utf-8") as f:
+              s = f.read()
+          s = s.replace("\"导致 [$packageName] (UID=$uid) 未被冻结的原因：\n• \" + reasons.joinToString(\"\n• \")", "\"导致 [$packageName] (UID=$uid) 未被冻结的原因：\\n• \" + reasons.joinToString(\"\\n• \")")
+          with open(p, "w", encoding="utf-8") as f:
+              f.write(s)
+          '
 
       - name: Set up JDK 17
         uses: actions/setup-java@v5
@@ -26,28 +40,25 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Setup Gradle 9.7.1
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Setup Gradle Wrapper
         uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: '9.7.1'
+          gradle-version: '8.7'
 
       - name: Build Debug & Release APKs
-        run: |
-          gradle :app:assembleDebug :app:assembleRelease -x lint
+        run: gradle assembleDebug assembleRelease --stacktrace
 
-      - name: Sign Release APK for direct install
-        run: |
-          UNSIGNED_APK=$(find app/build/outputs/apk/release -name "*-unsigned.apk" | head -n 1)
-          if [ -n "$UNSIGNED_APK" ]; then
-            keytool -genkey -v -keystore release.keystore -alias smillet -keyalg RSA -keysize 2048 -validity 10000 -storepass 123456 -keypass 123456 -dname "CN=SMillet, OU=Dev, O=OpenSource, L=Beijing, S=Beijing, C=CN"
-            BUILD_TOOLS_DIR=$(ls -d $ANDROID_HOME/build-tools/* | sort -V | tail -n 1)
-            "$BUILD_TOOLS_DIR/apksigner" sign --ks release.keystore --ks-pass pass:123456 --key-pass pass:123456 --out app/build/outputs/apk/release/smillet-next-release-signed.apk "$UNSIGNED_APK"
-          fi
-
-      - name: Upload Compiled APKs
+      - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
-          name: smillet-next-APKs
-          path: |
-            app/build/outputs/apk/debug/*.apk
-            app/build/outputs/apk/release/*-signed.apk
+          name: smillet-next-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+
+      - name: Upload Release APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: smillet-next-release-apk
+          path: app/build/outputs/apk/release/*.apk
