@@ -12,13 +12,31 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      - name: Unpack v2.1 Fixed ZIP
+      - name: Unpack ZIP & Apply Theme/Getter Fix
         run: |
-          if [ -f "SMillet_Miuix_v2.1_Fixed.zip" ]; then
+          if [ -f "SMillet_Miuix_v2.2_Fixed.zip" ]; then
+            unzip -o "SMillet_Miuix_v2.2_Fixed.zip"
+          elif [ -f "SMillet_Miuix_v2.1_Fixed.zip" ]; then
             unzip -o "SMillet_Miuix_v2.1_Fixed.zip"
           else
             unzip -o "$(ls -t *.zip | head -n 1)"
           fi
+
+          cat << 'EOF' > app/src/main/res/values/themes.xml
+          <?xml version="1.0" encoding="utf-8"?>
+          <resources>
+              <style name="Theme.SMillet" parent="@android:style/Theme.DeviceDefault.DayNight">
+                  <item name="android:windowNoTitle">true</item>
+                  <item name="android:windowActionBar">false</item>
+              </style>
+          </resources>
+          EOF
+
+          sed -i 's/@android:style\/Theme.DeviceDefault.DayNight.NoActionBar/@style\/Theme.SMillet/g' app/src/main/AndroidManifest.xml
+          sed -i 's/var systemContext: Context? = null/private var cachedSystemContext: Context? = null/g' app/src/main/java/com/sidesand/millet/hook/system/SystemServerHook.kt
+          sed -i 's/systemContext = ctx/cachedSystemContext = ctx/g' app/src/main/java/com/sidesand/millet/hook/system/SystemServerHook.kt
+          sed -i 's/systemContext?.let/cachedSystemContext?.let/g' app/src/main/java/com/sidesand/millet/hook/system/SystemServerHook.kt
+          sed -i 's/systemContext = it/cachedSystemContext = it/g' app/src/main/java/com/sidesand/millet/hook/system/SystemServerHook.kt
 
       - name: Set up JDK 17
         uses: actions/setup-java@v5
