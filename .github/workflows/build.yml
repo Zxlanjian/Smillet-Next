@@ -14,7 +14,7 @@ jobs:
 
       - name: Extract zip if uploaded as archive
         run: |
-          for z in Smillet-Next_v3.2.zip Smillet-Next*.zip smillet_next*.zip *.zip; do
+          for z in Smillet-Next_v3.3.zip Smillet-Next*.zip smillet_next*.zip *.zip; do
             if [ -f "$z" ]; then
               echo "Found $z, extracting..."
               unzip -o -q "$z"
