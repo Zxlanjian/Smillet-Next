@@ -3,7 +3,13 @@ name: Build Smillet-Next APK
 on:
   push:
     branches: [ "main", "master" ]
+    tags: [ "v*" ]
+  pull_request:
+    branches: [ "main", "master" ]
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -14,13 +20,11 @@ jobs:
 
       - name: Extract zip if uploaded as archive
         run: |
-          for z in Smillet-Next_v3.3.zip Smillet-Next*.zip smillet_next*.zip *.zip; do
-            if [ -f "$z" ]; then
-              echo "Found $z, extracting..."
-              unzip -o -q "$z"
-              break
-            fi
-          done
+          LATEST_ZIP=$(ls -t *.zip 2>/dev/null | head -n 1 || true)
+          if [ -n "$LATEST_ZIP" ] && [ -f "$LATEST_ZIP" ]; then
+            echo "Found archive $LATEST_ZIP, extracting..."
+            unzip -o -q "$LATEST_ZIP"
+          fi
 
       - name: Set up JDK 17
         uses: actions/setup-java@v5
@@ -44,6 +48,7 @@ jobs:
             keytool -genkey -v -keystore release.keystore -alias smillet -keyalg RSA -keysize 2048 -validity 10000 -storepass 123456 -keypass 123456 -dname "CN=Smillet-Next, OU=Dev, O=OpenSource, L=Beijing, S=Beijing, C=CN"
             BUILD_TOOLS_DIR=$(ls -d $ANDROID_HOME/build-tools/* | sort -V | tail -n 1)
             "$BUILD_TOOLS_DIR/apksigner" sign --ks release.keystore --ks-pass pass:123456 --key-pass pass:123456 --out app/build/outputs/apk/release/Smillet-Next-release-signed.apk "$UNSIGNED_APK"
+            rm -f release.keystore
           fi
 
       - name: Upload Compiled APKs
@@ -53,3 +58,12 @@ jobs:
           path: |
             app/build/outputs/apk/debug/*.apk
             app/build/outputs/apk/release/*-signed.apk
+
+      - name: Publish GitHub Release on Tag
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            app/build/outputs/apk/release/*-signed.apk
+            app/build/outputs/apk/debug/*.apk
