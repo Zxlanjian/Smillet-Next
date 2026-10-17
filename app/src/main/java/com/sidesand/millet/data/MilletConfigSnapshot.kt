@@ -1,0 +1,32 @@
+package com.sidesand.millet.data
+
+data class MilletConfigSnapshot(
+    var disableKill: Boolean = true,
+    var disableVolume: Boolean = true,
+    var disableCharge: Boolean = true,
+    var blockAddPowerSaveWhitelistApps: Boolean = true,
+    var batteryChangeObserve: Boolean = false,
+    var enableDoze: Boolean = true,
+    var skipStateCheck: Boolean = true,
+    var disableMotionListener: Boolean = true,
+    var batteryOptWhiteSet: Set<String> = emptySet(),
+    var batteryOptBlackSet: Set<String> = emptySet(),
+    var whiteAppSet: Set<String> = emptySet(),
+    var messageAppSet: Set<String> = emptySet(),
+    var forceFreezeSet: Set<String> = emptySet(),
+    var blockThawSet: Set<String> = emptySet(),
+    var forbidSyncBinderSet: Set<String> = emptySet(),
+    var notFreezeWhenHasFgsSet: Set<String> = emptySet(),
+    var logLevel: String = "info",
+    var themeColorMode: Int = 0,
+    var monetEnabled: Boolean = false,
+    var blurEnabled: Boolean = true,
+    var topBarBlurMode: Int = 0,
+    var predictiveBackEnabled: Boolean = true,
+    var uiScale: Int = 100,
+    var swipeBackEnabled: Boolean = true,
+    var floatingBottomBar: Boolean = false,
+    var floatingBottomBarStyle: Int = 0,
+    var bottomBarMode: Int = 0,
+    var hideTaskCard: Boolean = false
+)

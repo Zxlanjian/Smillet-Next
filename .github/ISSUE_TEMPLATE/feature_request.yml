@@ -1,0 +1,19 @@
+name: 功能建议 (Feature Request)
+description: 提交新功能想法或墓碑策略改进建议
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: 需求背景或痛点
+      description: 你希望解决什么场景下的后台冻结、解冻或省电问题？
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: 期望的实现方案
+      description: 请描述你期望新增的开关、策略或界面交互方式
+    validations:
+      required: true

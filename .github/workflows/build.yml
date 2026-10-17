@@ -17,13 +17,24 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+        with:
+          fetch-depth: 2
 
       - name: Extract zip if uploaded as archive
         run: |
-          LATEST_ZIP=$(ls -t *.zip 2>/dev/null | head -n 1 || true)
-          if [ -n "$LATEST_ZIP" ] && [ -f "$LATEST_ZIP" ]; then
-            echo "Found archive $LATEST_ZIP, extracting..."
-            unzip -o -q "$LATEST_ZIP"
+          COMMITTED_ZIP=$(git diff-tree --no-commit-id --name-only -r HEAD -- "*.zip" 2>/dev/null | head -n 1 || true)
+          if [ -n "$COMMITTED_ZIP" ] && [ -f "$COMMITTED_ZIP" ]; then
+            TARGET_ZIP="$COMMITTED_ZIP"
+          else
+            TARGET_ZIP=$(ls -t *.zip 2>/dev/null | head -n 1 || true)
+          fi
+          if [ -n "$TARGET_ZIP" ] && [ -f "$TARGET_ZIP" ]; then
+            echo "Found archive $TARGET_ZIP, extracting..."
+            unzip -o -q "$TARGET_ZIP"
+            if [ ! -f "settings.gradle.kts" ] && [ -d "SMillet-Miuix" ]; then
+              cp -rf SMillet-Miuix/. .
+              rm -rf SMillet-Miuix
+            fi
           fi
 
       - name: Set up JDK 17

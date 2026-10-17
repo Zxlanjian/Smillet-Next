@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- 居中扁平化六角白雪花主干与分支 -->
+    <group
+        android:pivotX="54"
+        android:pivotY="54">
+        <!-- 0 度轴与上下V形分支 -->
+        <path
+            android:strokeColor="#FFFFFF"
+            android:strokeWidth="3.8"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:pathData="M54,26 L54,82 M46.5,32.5 L54,40 L61.5,32.5 M48.5,42.5 L54,48 L59.5,42.5 M46.5,75.5 L54,68 L61.5,75.5 M48.5,65.5 L54,60 L59.5,65.5" />
+    </group>
+    <group
+        android:pivotX="54"
+        android:pivotY="54"
+        android:rotation="60">
+        <path
+            android:strokeColor="#FFFFFF"
+            android:strokeWidth="3.8"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:pathData="M54,26 L54,82 M46.5,32.5 L54,40 L61.5,32.5 M48.5,42.5 L54,48 L59.5,42.5 M46.5,75.5 L54,68 L61.5,75.5 M48.5,65.5 L54,60 L59.5,65.5" />
+    </group>
+    <group
+        android:pivotX="54"
+        android:pivotY="54"
+        android:rotation="120">
+        <path
+            android:strokeColor="#FFFFFF"
+            android:strokeWidth="3.8"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:pathData="M54,26 L54,82 M46.5,32.5 L54,40 L61.5,32.5 M48.5,42.5 L54,48 L59.5,42.5 M46.5,75.5 L54,68 L61.5,75.5 M48.5,65.5 L54,60 L59.5,65.5" />
+    </group>
+</vector>

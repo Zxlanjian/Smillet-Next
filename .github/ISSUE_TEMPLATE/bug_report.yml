@@ -1,0 +1,33 @@
+name: Bug 反馈 (Bug Report)
+description: 反馈冻结失效、异常解冻、界面闪退或兼容性问题
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: input
+    id: device_info
+    attributes:
+      label: 机型与系统版本 (Device & HyperOS Version)
+      description: 请填写手机型号、HyperOS 版本及 Android SDK 版本
+      placeholder: "例如：Xiaomi 15 / HyperOS 2.0.105.0 / Android 16 (SDK 37)"
+    validations:
+      required: true
+  - type: input
+    id: lspd_version
+    attributes:
+      label: LSPosed 与 Root 环境
+      placeholder: "例如：KernelSU + JingMatrix LSPosed 1.10.1 (API 102)"
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: 问题描述与复现步骤
+      description: 请详细描述问题表现、涉及的目标应用包名及你在模块中勾选的策略
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: 模块运行日志 (Smillet-Next Logs)
+      description: 请在模块主页点击「导出日志」并粘贴相关日志片段，或上传导出的 txt 文件
+      render: shell
