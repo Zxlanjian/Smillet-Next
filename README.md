@@ -5,17 +5,17 @@
 [![Android SDK](https://img.shields.io/badge/Android-13%20~%2016%20(SDK%2033~37)-3DDC84.svg)](https://developer.android.com)
 [![UI](https://img.shields.io/badge/UI-Miuix%20Compose-FF6900.svg)](https://github.com/compose-miuix-ui/miuix)
 
-**Smillet-Next** 是一款面向小米 **Xiaomi HyperOS (澎湃 OS 1.0 / 2.0 / 3.0)** 与 **MIUI** 的原生墓碑机制（`Greezer` / `Millet`）增强与深度省电（`DeepDoze`）控制模块。
+**Smillet-Next** 是一款面向小米 **Xiaomi HyperOS (澎湃 OS4.0)** 与 **MIUI** 的原生墓碑机制（`Greezer` / `Millet`）增强与深度省电（`DeepDoze`）控制模块。
 
-本项目完全基于 **Kotlin + Jetpack Compose** 编写，采用 **[compose-miuix-ui/miuix](https://github.com/compose-miuix-ui/miuix)** 构建原生 HyperOS 风格界面，并全面迁移至 **LSPosed Modern API 102 (`io.github.libxposed`)**。
+此模块基于Gemini4编写，仅在hyperos4上进行测试！
 
+本项目完全基于 **Kotlin + Jetpack Compose** 编写，采用 **[compose-miuix-ui/miuix](https://github.com/compose-miuix-ui/miuix)** 构建原生 HyperOS 风格界面。
 ---
 
 ## 核心特性
 
 ### 1. 原生墓碑 (`GreezeManagerService` & `MilletPolicy`) 深度增强
 - **双作用域协同接管**：同时接管 `system_server` (`GreezeManagerService`、`AurogonImmobulusMode`、`ListAppsManager`、`PowerStrategyMode`) 与 `com.miui.powerkeeper` (`MilletPolicy`、`MilletHandler`、`MilletBrightHandler`)，实现策略层与执行层实时联动。
-- **HyperOS 2.0 / 3.0 (SDK 37) 完整适配**：
   - 兼容 SDK 37 全小写/下划线格式的冻结与解冻原因（如 `packet`、`check binder`、`sync binder`、`screen_on`、`from system`）。
   - 适配澎湃 OS 新版 `com.miui.server.greeze.power.ListAppsManager` 与 `PowerStrategyMode` 名单策略管控。
 - **单应用 7 维策略矩阵**：
@@ -45,8 +45,8 @@
 
 ## 环境要求与激活说明
 
-1. **系统环境**：Xiaomi HyperOS 1.0 / 2.0 / 3.0 或 MIUI 14（Android 13 ~ 16，SDK 33 ~ 37）。
-2. **框架要求**：支持 `libxposed` API 101 / 102 的 LSPosed 框架（如 LSPosed_mod / JingMatrix LSPosed）。
+1. **系统环境**：Xiaomi HyperOS 4.0。
+2. **框架要求**：支持 `libxposed` API 102 的 LSPosed 框架。
 3. **LSPosed 作用域勾选（必选）**：
    - `系统框架` (`system` / `android`)
    - `电量与性能` (`com.miui.powerkeeper`)
